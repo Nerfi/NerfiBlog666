@@ -1,9 +1,12 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import Welcome from '@components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+const title = "Nerf's World"
 
 ---
 
-<Layout>
+<Layout pageTitle={title}>
+	<!-- ver que hacer con el componente Welcome, renombrarlo y meter el contenido principal de la app ahi  -->
+
 	<Welcome />
 </Layout>
