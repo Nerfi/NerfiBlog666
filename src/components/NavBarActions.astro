@@ -1,19 +1,19 @@
----
----
 <div class="sideBarActions">
-    <!-- esto tienen que ser image que tengan las acciones -->
-    <button>Some action, might delete this</button>
-    <a href="">this anchor should redirecto to RSS</a>
-    <button>this button is for toggle dark and light mode</button>
+    <a href="/feed.xml" aria-label="RSS feed" title="RSS">
+        <img src="/icons/rss.svg" alt="RSS" />
+    </a>
+
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+        <img src="/icons/github.svg" alt="GitHub" />
+    </a>
+
+    <button aria-label="Toggle theme" title="Toggle theme (no-op)">
+        <img src="/icons/theme.svg" alt="Theme" />
+    </button>
 </div>
 
-
 <style>
-    .sideBarActions {
-        display: flex;
-        flex-direction: row;
-        /* delete this line  */
-        border: solid red 3px;
-        padding: 3px;
-    }
+    .sideBarActions { display: flex; gap: 0.5rem; align-items: center; }
+    .sideBarActions a, .sideBarActions button { background: transparent; border: none; padding: 0; }
+    .sideBarActions img { width: 20px; height: 20px; display: block; }
 </style>
