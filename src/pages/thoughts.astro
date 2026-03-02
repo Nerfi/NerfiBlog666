@@ -1,7 +1,16 @@
 ---
-import Layout from "@layouts/Layout.astro"
-const title = "Thoughts"
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+const title = "Thoughts";
+
+//obtener todos los posts
+const allposts = await getCollection("blog", ({ data }) => {
+    return data.tags.includes("thoughts");
+});
+
 ---
+
 <Layout pageTitle={title}>
-<h1>aqui creo que dejare todos los pensamientos randoms o el index nose</h1>
+    <h1>aqui creo que dejare todos los pensamientos randoms o el index nose</h1>
+     {allposts.map((post) => <a href={`/posts/${post.id}`}>{post.data.title}</a> )} 
 </Layout>
