@@ -8,6 +8,7 @@
   --max-width: 1100px;
   --sidebar-width: 220px;
   --gutter: 2.25rem;
+  --bg-dark:#0f1720;
 }
 
 html {
@@ -17,6 +18,45 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* dark styles */
+
+html.dark {
+  background-color: #161618;
+  color: #2c2929;
+}
+
+.dark .NavBarMain  a {
+  color: #fff;
+}
+
+.dark .NavBarMain a:hover,
+.dark .NavBarMain a:focus {
+  color: #0b0920;
+}
+
+/* .dark .NavBarMain a {
+  color: #0c0505;
+} */
+
+.dark a {
+  color: #fff;
+}
+.dark body {
+background-color: var(--bg-dark);
+}
+
+.dark .sideBarActions img {
+  filter: invert(1);
+}
+
+.dark p {
+  color: #fff;
+}
+
+
+/* end dark theme */
+
 
 body {
   margin: 0;
