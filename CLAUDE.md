@@ -3,10 +3,10 @@
 ## Project Overview
 
 **Nerf's World** — A minimal, bilingual (ES/EN) personal blog built with Astro 5.
-Deployed to Cloudflare Pages via Git integration.
+Deployed to Cloudflare Workers (static assets) via Git integration.
 
 - **Repo**: `Nerfi/NerfiBlog666` (GitHub)
-- **Live URL**: `https://trip.pages.dev`
+- **Live URL**: `https://trip.six-six6.workers.dev`
 - **Author**: TRIP (canonical pen name)
 
 ---
@@ -24,9 +24,9 @@ Deployed to Cloudflare Pages via Git integration.
 |---|---|---|
 | Language model | One language per post, UI chrome in both ES/EN | Simpler to write; matches personal blog workflow |
 | URL scheme | ES at `/`, EN at `/en/` (no prefix for default) | Clean URLs for primary language; explicit for secondary |
-| Analytics | Cloudflare Web Analytics | Free, cookieless, same dashboard as Pages |
+| Analytics | Cloudflare Web Analytics | Free, cookieless, same dashboard as Workers |
 | Photos | Local in repo, colocated with posts, build-optimized | Few photos; Astro content layer handles optimization |
-| Deployment | Cloudflare Pages + Git integration (master branch) | Auto-deploy on push; preview deploys |
+| Deployment | Cloudflare Workers + Git integration (master branch) | Auto-deploy on push; preview deploys |
 | i18n routing | Astro native i18n config (`prefixDefaultLocale: false`) | Built-in; no extra deps; `Astro.resolvePageLocale()` works |
 | Fonts | Self-hosted via `@fontsource/inter` + `@fontsource/source-serif-4` | No Google Fonts request; better LCP/privacy |
 | CSS approach | Mobile-first with progressive enhancement breakpoints | Mobile: single column stacked; Tablet (600px+); Desktop (900px+, sticky sidebar) |
@@ -174,7 +174,7 @@ Helpers: `getDictionary(lang)`, `langPrefix(lang)`, `langPath(lang, path)`, `pos
 | JSON-LD | `BlogPosting` + `BreadcrumbList` on posts; `CollectionPage` on sections/tags; `WebSite` + `Person` on home/about |
 | Sitemap | `@astrojs/sitemap` → `sitemap-index.xml` |
 | RSS | Per-locale (`/feed.xml`, `/en/feed.xml`) via `@astrojs/rss` |
-| Robots.txt | `User-agent: *` + `Sitemap: https://trip.pages.dev/sitemap-index.xml` |
+| Robots.txt | `User-agent: *` + `Sitemap: https://trip.six-six6.workers.dev/sitemap-index.xml` |
 | Fonts | Self-hosted (no external requests) |
 | Images | `width`/`height`/`srcset`/`loading=lazy` via content layer |
 
@@ -187,7 +187,7 @@ Helpers: `getDictionary(lang)`, `langPrefix(lang)`, `langPath(lang, path)`, `pos
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" 
   data-cf-beacon='{"token":"...","useSession":true}'>
 ```
-Token via `PUBLIC_CF_ANALYTICS_TOKEN` env var (set in Pages dashboard).
+Token via `PUBLIC_CF_ANALYTICS_TOKEN` env var (set as a **build** variable in the Worker settings).
 
 ## Language Toggle
 

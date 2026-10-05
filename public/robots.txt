@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://trip.pages.dev/sitemap-index.xml
+Sitemap: https://trip.six-six6.workers.dev/sitemap-index.xml
