@@ -7,8 +7,8 @@ const dict = getDictionary('en');
 
 <Layout lang="en" pageTitle={dict.aboutTitle} description={dict.aboutIntro}>
   <section class="about">
-    {dict.aboutBody.map((p, i) => (
-      <p key={i} class="about-paragraph">{p}</p>
+    {dict.aboutBody.map((p) => (
+      <p class="about-paragraph">{p}</p>
     ))}
   </section>
 </Layout>

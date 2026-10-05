@@ -2,15 +2,16 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getDictionary, langPath } from '@i18n/config';
+import { postLang, formatDate, sortPosts } from '@utils/posts';
 import type { Lang } from '@i18n/config';
 
 const lang: Lang = 'en';
 const dict = getDictionary(lang);
 
 const allPosts = await getCollection('blog');
-const thoughts = allPosts
-  .filter((p) => postLang(p.id) === lang && p.data.tags.includes('thoughts'))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const thoughts = sortPosts(
+  allPosts.filter((p) => postLang(p.id) === lang && p.data.tags.includes('thoughts'))
+);
 
 function groupByYear(posts: typeof thoughts): Record<string, typeof posts> {
   const groups: Record<string, typeof posts> = {};
@@ -31,11 +32,11 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
     <h1>{dict.sections.thoughts}</h1>
     {years.length > 0 ? (
       years.map((year) => (
-        <article class="year-group" key={year}>
+        <article class="year-group">
           <h2 class="year-heading">{year}</h2>
           <ul class="post-list">
             {byYear[year].map((post) => (
-              <li class="post-list-item" key={post.id}>
+              <li class="post-list-item">
                 <time class="post-date" datetime={post.data.pubDate.toISOString()}>
                   {formatDate(post.data.pubDate, lang)}
                 </time>
@@ -45,7 +46,7 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
                 <p class="post-description">{post.data.description}</p>
                 <div class="post-tags">
                   {post.data.tags.map((tag) => (
-                    <span class="tag" key={tag}>{tag}</span>
+                    <span class="tag">{tag}</span>
                   ))}
                 </div>
               </li>
@@ -58,13 +59,3 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
     )}
   </section>
 </Layout>
-
-<script>
-  function formatDate(date: Date, lang: 'es' | 'en'): string {
-    const locale = lang === 'es' ? 'es-ES' : 'en-US';
-    return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
-  }
-  function postLang(id: string): 'es' | 'en' {
-    return id.startsWith('en/') ? 'en' : 'es';
-  }
-</script>

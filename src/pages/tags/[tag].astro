@@ -1,7 +1,8 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getDictionary, langPath, postLang } from '@i18n/config';
+import { getDictionary, langPath } from '@i18n/config';
+import { postLang, formatDate, sortPosts } from '@utils/posts';
 import type { Lang } from '@i18n/config';
 
 export async function getStaticPaths() {
@@ -22,9 +23,9 @@ const { tag, lang } = Astro.props;
 const dict = getDictionary(lang);
 
 const allPosts = await getCollection('blog');
-const tagged = allPosts
-  .filter((p) => postLang(p.id) === lang && p.data.tags.includes(tag))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const tagged = sortPosts(
+  allPosts.filter((p) => postLang(p.id) === lang && p.data.tags.includes(tag))
+);
 
 const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
 ---
@@ -37,7 +38,7 @@ const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
     {tagged.length > 0 ? (
       <ul class="post-list">
         {tagged.map((post) => (
-          <li class="post-list-item" key={post.id}>
+          <li class="post-list-item">
             <time class="post-date" datetime={post.data.pubDate.toISOString()}>
               {formatDate(post.data.pubDate, lang)}
             </time>
@@ -47,7 +48,7 @@ const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
             <p class="post-description">{post.data.description}</p>
             <div class="post-tags">
               {post.data.tags.map((t) => (
-                <span class="tag" key={t}>{t}</span>
+                <span class="tag">{t}</span>
               ))}
             </div>
           </li>
@@ -58,13 +59,3 @@ const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
     )}
   </section>
 </Layout>
-
-<script>
-  function formatDate(date: Date, lang: 'es' | 'en'): string {
-    const locale = lang === 'es' ? 'es-ES' : 'en-US';
-    return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
-  }
-  function postLang(id: string): 'es' | 'en' {
-    return id.startsWith('en/') ? 'en' : 'es';
-  }
-</script>

@@ -2,8 +2,9 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { site } from '@config/site';
 import { getDictionary, postLang } from '@i18n/config';
+import type { APIContext } from 'astro';
 
-export async function GET(context) {
+export async function GET(context: APIContext) {
   const posts = await getCollection('blog');
   const esPosts = posts
     .filter((p) => postLang(p.id) === 'es')

@@ -4,14 +4,14 @@ import type { Lang } from '@i18n/config';
 import { formatDate, readMinutes, getPrevNext, postLang, sortPosts, filterByLang } from '@utils/posts';
 import type { Post } from '@utils/posts';
 import { getCollection, render } from 'astro:content';
-import { site } from '@config/site';
 
 interface Props {
   post: Post;
   lang: Lang;
+  slug: string;
 }
 
-const { post, lang } = Astro.props;
+const { post, lang, slug } = Astro.props;
 const dict = getDictionary(lang);
 
 const allPosts = await getCollection('blog');
@@ -19,20 +19,21 @@ const langPosts = filterByLang(allPosts, lang);
 const sortedPosts = sortPosts(langPosts);
 const { prev, next } = getPrevNext(sortedPosts, post);
 
-const { Content, headings } = await render(post);
+const { Content } = await render(post);
 const pubDate = post.data.pubDate;
 const minutes = readMinutes(post.body);
 const formattedDate = formatDate(pubDate, lang);
-const canonical = new URL(langPath(lang, `/posts/${post.id}`), site.url);
-const ogImage = post.data.cover ? new URL(post.data.cover, site.url).toString() : `${site.url}/og-default.png`;
+const siteUrl = Astro.site!.toString();
+const canonical = new URL(langPath(lang, `/posts/${slug}`), Astro.site!);
+const ogImage = post.data.cover ? new URL(post.data.cover, Astro.site!).toString() : `${siteUrl}/og-default.png`;
 
 // Breadcrumb JSON-LD
 const breadcrumb = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": dict.nav.home, "item": `${site.url}${langPath(lang, '/')}` },
-    { "@type": "ListItem", "position": 2, "name": dict.sections.thoughts, "item": `${site.url}${langPath(lang, '/thoughts')}` },
+    { "@type": "ListItem", "position": 1, "name": dict.nav.home, "item": `${siteUrl}${langPath(lang, '/')}` },
+    { "@type": "ListItem", "position": 2, "name": dict.sections.thoughts, "item": `${siteUrl}${langPath(lang, '/thoughts')}` },
     { "@type": "ListItem", "position": 3, "name": post.data.title, "item": canonical.toString() }
   ]
 };
@@ -46,11 +47,15 @@ const blogPosting = {
   "image": ogImage,
   "datePublished": pubDate.toISOString(),
   "dateModified": pubDate.toISOString(),
-  "author": { "@type": "Person", "name": post.data.author || site.author },
-  "publisher": { "@type": "Organization", "name": site.name },
+  "author": { "@type": "Person", "name": post.data.author || "TRIP" },
+  "publisher": { "@type": "Organization", "name": "Nerf's World" },
   "inLanguage": lang,
   "mainEntityOfPage": { "@type": "WebPage", "@id": canonical.toString() }
 };
+
+function getPostSlug(p: Post, l: Lang): string {
+  return p.id.startsWith(`${l}/`) ? p.id.slice(l.length + 1) : p.id;
+}
 ---
 
 <article class="post-page">
@@ -79,7 +84,7 @@ const blogPosting = {
   {prev || next ? (
     <nav class="pager" aria-label="Navigation">
       {prev ? (
-        <a class="prev" href={langPath(lang, `/posts/${prev.id}`)}>
+        <a class="prev" href={langPath(lang, `/posts/${getPostSlug(prev, lang)}`)}>
           <span class="pager-label">{dict.prev}</span>
           <span class="pager-title">{prev.data.title}</span>
         </a>
@@ -87,7 +92,7 @@ const blogPosting = {
         <div class="prev empty-slot"><span class="pager-label">{dict.prev}</span></div>
       )}
       {next ? (
-        <a class="next" href={langPath(lang, `/posts/${next.id}`)}>
+        <a class="next" href={langPath(lang, `/posts/${getPostSlug(next, lang)}`)}>
           <span class="pager-label">{dict.next}</span>
           <span class="pager-title">{next.data.title}</span>
         </a>

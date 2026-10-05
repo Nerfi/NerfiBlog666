@@ -2,15 +2,16 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getDictionary, langPath } from '@i18n/config';
+import { postLang, formatDate, sortPosts } from '@utils/posts';
 import type { Lang } from '@i18n/config';
 
 const lang: Lang = 'es';
 const dict = getDictionary(lang);
 
 const allPosts = await getCollection('blog');
-const trips = allPosts
-  .filter((p) => postLang(p.id) === lang && p.data.tags.includes('trips'))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const trips = sortPosts(
+  allPosts.filter((p) => postLang(p.id) === lang && p.data.tags.includes('trips'))
+);
 ---
 
 <Layout lang={lang} pageTitle={dict.sections.trips} description={dict.aboutIntro}>
@@ -20,7 +21,7 @@ const trips = allPosts
     {trips.length > 0 ? (
       <ul class="trip-list">
         {trips.map((post) => (
-          <li class="trip-card" key={post.id}>
+          <li class="trip-card">
             <a href={langPath(lang, `/posts/${post.id}`)}>
               {post.data.cover && (
                 <img src={post.data.cover} alt={post.data.title} loading="lazy" />
@@ -41,13 +42,3 @@ const trips = allPosts
     )}
   </section>
 </Layout>
-
-<script>
-  function formatDate(date: Date, lang: 'es' | 'en'): string {
-    const locale = lang === 'es' ? 'es-ES' : 'en-US';
-    return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
-  }
-  function postLang(id: string): 'es' | 'en' {
-    return id.startsWith('en/') ? 'en' : 'es';
-  }
-</script>

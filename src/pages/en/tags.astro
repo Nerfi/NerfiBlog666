@@ -30,7 +30,7 @@ const tags = Object.entries(tagCounts)
     {tags.length > 0 ? (
       <div class="tag-cloud">
         {tags.map((tag) => (
-          <a class="tag" href={langPath(lang, `/tags/${tag.name}`)} key={tag.name}>
+          <a class="tag" href={langPath(lang, `/tags/${tag.name}`)}>
             #{tag.name}
             <span class="tag-count">{dict.tagCount(tag.count)}</span>
           </a>

@@ -1,8 +1,12 @@
 import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '@i18n/config';
-import { postLang } from '@i18n/config';
+import { postLang as i18nPostLang } from '@i18n/config';
 
 export type Post = CollectionEntry<'blog'>;
+
+export function postLang(id: string): Lang {
+  return i18nPostLang(id);
+}
 
 export function sortPosts(posts: Post[]): Post[] {
   return [...posts].sort(

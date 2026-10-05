@@ -2,15 +2,12 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getDictionary } from '@i18n/config';
+import { postLang, formatDate, sortPosts } from '@utils/posts';
 
 const dict = getDictionary('es');
 
 const allPosts = await getCollection('blog');
-const latest = allPosts
-  .filter((post) => postLang(post.id) === 'es')
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
-
+const latest = sortPosts(allPosts.filter((p) => postLang(p.id) === 'es')).slice(0, 3);
 ---
 
 <Layout lang="es" pageTitle={dict.homeTitle} description={dict.homeIntro}>
@@ -30,13 +27,15 @@ const latest = allPosts
         <h3>{dict.latestTitle}</h3>
         <ul>
           {latest.map((post) => (
-            <li key={post.id}>
+            <li>
               <a href={`/posts/${post.id}`} class="post-summary">
                 <time datetime={post.data.pubDate.toISOString()}>
                   {formatDate(post.data.pubDate, 'es')}
                 </time>
                 <span class="post-summary-meta">
-                  {post.data.tags.map((t) => `<span class="tag">${t}</span>`).join(' ')}
+                  {post.data.tags.map((t) => (
+                    <span class="tag">{t}</span>
+                  ))}
                 </span>
                 <span>{post.data.title}</span>
               </a>
