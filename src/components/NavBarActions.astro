@@ -1,9 +1,28 @@
 ---
 import type { Lang } from '@i18n/config';
 import { site } from '@config/site';
+import { langPath } from '@i18n/config';
 
 const { lang } = Astro.props;
 const rssHref = lang === 'es' ? '/feed.xml' : '/en/feed.xml';
+const currentPath = Astro.url.pathname;
+
+function getAlternatePath(currentLang: Lang, path: string): string {
+  const otherLang = currentLang === 'es' ? 'en' : 'es';
+  
+  if (path === '/') return langPath(otherLang, '/');
+  if (path.startsWith('/en/')) return path.replace('/en/', otherLang === 'es' ? '/' : '/en/');
+  if (path.startsWith('/posts/')) return langPath(otherLang, path);
+  if (path.startsWith('/tags/')) return langPath(otherLang, path);
+  if (path.startsWith('/thoughts')) return langPath(otherLang, '/thoughts');
+  if (path.startsWith('/trips')) return langPath(otherLang, '/trips');
+  if (path.startsWith('/about')) return langPath(otherLang, '/about');
+  if (path.startsWith('/tags')) return langPath(otherLang, '/tags');
+  return langPath(otherLang, '/');
+}
+
+const alternateHref = getAlternatePath(lang, currentPath);
+const alternateLabel = lang === 'es' ? 'English' : 'Español';
 ---
 
 <div class="sideBarActions">
@@ -19,6 +38,15 @@ const rssHref = lang === 'es' ? '/feed.xml' : '/en/feed.xml';
     title="GitHub"
   >
     <img src="/icons/github.svg" alt="GitHub" />
+  </a>
+
+  <a
+    href={alternateHref}
+    aria-label={alternateLabel}
+    title={alternateLabel}
+    class="lang-toggle"
+  >
+    <img src="/icons/lang.svg" alt={alternateLabel} />
   </a>
 
   <button
