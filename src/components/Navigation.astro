@@ -1,11 +1,32 @@
 ---
-import '@styles/global.css'
+import { getDictionary, langPath } from '@i18n/config';
+import type { Lang } from '@i18n/config';
+
+const { lang } = Astro.props;
+const dict = getDictionary(lang);
+const current = Astro.url.pathname;
+
+const links = [
+  { key: 'home', href: langPath(lang, '/') },
+  { key: 'thoughts', href: langPath(lang, '/thoughts') },
+  { key: 'trips', href: langPath(lang, '/trips') },
+  { key: 'tags', href: langPath(lang, '/tags') },
+  { key: 'about', href: langPath(lang, '/about') },
+] as const;
+
+function isActive(href: string): boolean {
+  if (href === '/') return current === '/';
+  return current === href || current.startsWith(`${href}/`);
+}
 ---
 
-<nav id="navBar" class="NavBarMain">
-<a href="/">Inicio</a>
-<a href="/about">About the author</a>
-<a href="/thoughts">Pensaminetos</a>
-<a href="/trips">Viajes / fotos</a>
-<a href="/tags">Todas las etiquetas-tematicas</a>
+<nav class="NavBarMain" aria-label="Main">
+  {links.map((link) => (
+    <a
+      href={link.href}
+      class:list={[{ active: isActive(link.href) }]}
+    >
+      {dict.nav[link.key]}
+    </a>
+  ))}
 </nav>

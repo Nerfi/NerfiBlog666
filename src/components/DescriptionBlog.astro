@@ -1,7 +1,14 @@
 ---
----
-<h1>
-    <a href="/"> Nerf's World</a>   
-</h1>
+import { getDictionary, langPath } from '@i18n/config';
+import type { Lang } from '@i18n/config';
 
-<p>this should be a tiny intro about me and the blog, some random shit </p>
+const { lang } = Astro.props;
+const dict = getDictionary(lang);
+---
+
+<header class="sidebar-header">
+  <h1 class="site-title">
+    <a href={langPath(lang, '/')}>{dict.siteName}</a>
+  </h1>
+  <p class="site-description">{dict.siteDescription}</p>
+</header>

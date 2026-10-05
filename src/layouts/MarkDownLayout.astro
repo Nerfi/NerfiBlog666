@@ -1,17 +1,14 @@
 ---
+import Layout from './Layout.astro';
+
 const { frontmatter } = Astro.props;
-import Layout from "./Layout.astro";
-const pageTitle = "test primer blog "
 ---
 
-<Layout pageTitle={pageTitle}>
-    <h1 class="test">{frontmatter.title}</h1>
-    <p>Escrito por {frontmatter.author}</p>
+<Layout lang="es" pageTitle={frontmatter.title}>
+  <article>
+    <p class="section-label">Escrito</p>
+    <h1>{frontmatter.title}</h1>
+    <p class="lede">{frontmatter.description}</p>
     <slot />
+  </article>
 </Layout>
-
-<style>
-    .test {
-        border: solid rgb(119, 0, 255) 5px;
-    }
-</style>

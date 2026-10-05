@@ -1,9 +1,15 @@
 ---
-const date = new Date().getFullYear();
-const authorName = 'Nerfs'
+import { getDictionary } from '@i18n/config';
+import type { Lang } from '@i18n/config';
+
+const { lang } = Astro.props;
+const dict = getDictionary(lang);
+const year = new Date().getFullYear();
+const rssHref = lang === 'es' ? '/feed.xml' : '/en/feed.xml';
 ---
 
-
 <footer>
-    Made with love by {authorName} - {date}
+  <span>{dict.rights(year)}</span>
+  <span>{dict.siteDescription}</span>
+  <a href={rssHref} title="RSS">RSS</a>
 </footer>

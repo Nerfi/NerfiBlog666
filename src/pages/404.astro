@@ -1,0 +1,15 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { getDictionary } from '@i18n/config';
+
+const dict = getDictionary('es');
+---
+
+<Layout lang="es" pageTitle={`404 · ${dict.siteName}`}>
+  <p class="section-label">404</p>
+  <h1>{dict.notFoundTitle}</h1>
+  <p>{dict.notFoundBody}</p>
+  <p>
+    <a href="/">→ {dict.nav.home}</a>
+  </p>
+</Layout>

@@ -1,61 +1,63 @@
+---
+import type { Lang } from '@i18n/config';
+import { site } from '@config/site';
+
+const { lang } = Astro.props;
+const rssHref = lang === 'es' ? '/feed.xml' : '/en/feed.xml';
+---
+
 <div class="sideBarActions">
-    <a href="/feed.xml" aria-label="RSS feed" title="RSS">
-        <img src="/icons/rss.svg" alt="RSS" />
-    </a>
+  <a href={rssHref} aria-label="RSS feed" title="RSS">
+    <img src="/icons/rss.svg" alt="RSS" />
+  </a>
 
-    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
-        <img src="/icons/github.svg" alt="GitHub" />
-    </a>
+  <a
+    href={site.github}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GitHub"
+    title="GitHub"
+  >
+    <img src="/icons/github.svg" alt="GitHub" />
+  </a>
 
-    <button aria-label="Toggle theme" title="Toggle theme (no-op)" id="toggleBtn">
-        <img src="/icons/theme.svg" alt="Theme" />
-    </button>
+  <button
+    aria-label="Toggle theme"
+    title="Toggle theme"
+    id="toggleBtn"
+  >
+    <img src="/icons/theme.svg" alt="Theme" />
+  </button>
 </div>
 
-<style>
-    .sideBarActions { display: flex; gap: 0.5rem; align-items: center; }
-    .sideBarActions a, .sideBarActions button { background: transparent; border: none; padding: 0; }
-    .sideBarActions img { width: 20px; height: 20px; display: block; }
-</style>
-
-<!-- is: inline le da prioridad a la carga de este codigo Js, sera lo primero que se cargue antes que cualquier otro Js que no tenga esa orden -->
 <script is:inline>
-  // self call function in order to call it inmediatly after page loads
-
-  const theme =(() => {
-    const localStorageTheme  = localStorage.getItem("theme") ?? "";
-    if(["dark", "light"].includes(localStorageTheme)) {
-        return localStorageTheme;
+  const theme = (() => {
+    const stored = localStorage.getItem('theme') ?? '';
+    if (['dark', 'light'].includes(stored)) {
+      return stored;
     }
-
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
+      return 'dark';
     }
     return 'light';
-
   })();
 
   if (theme === 'light') {
-    document.documentElement.classList.remove('dark')
-  }else {
-    document.documentElement.classList.add('dark')
+    document.documentElement.classList.remove('dark');
+  } else {
+    document.documentElement.classList.add('dark');
   }
 
-  // seteamos el estilo
-  window.localStorage.setItem("theme", theme);
-
-  // funcion para cambiar hacer toggle de dark mode o light mode 
+  window.localStorage.setItem('theme', theme);
 
   const handleToggleClick = () => {
     const element = document.documentElement;
-    element.classList.toggle("dark")
+    element.classList.toggle('dark');
+    const isDark = element.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  };
 
-    const isDark = element.classList.contains("dark");
-
-    localStorage.setItem("theme", isDark ? "dark" : "light")
-  }
-
-  // grabbing the btn on which we will listen to the change of theme 
-  document.getElementById("toggleBtn")?.addEventListener("click", handleToggleClick);
-
+  document
+    .getElementById('toggleBtn')
+    ?.addEventListener('click', handleToggleClick);
 </script>

@@ -1,40 +1,113 @@
 ---
-import "@styles/global.css";
-import Navigation from "@components/Navigation.astro";
-import Footer from "@components/Footer.astro";
-import Description from "@components/DescriptionBlog.astro";
-import NavBarActions from "@components/NavBarActions.astro";
+import '@fontsource/inter/300.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/source-serif-4/400.css';
+import '@fontsource/source-serif-4/600.css';
+import '@fontsource/source-serif-4/400-italic.css';
+import '@styles/global.css';
+import Navigation from '@components/Navigation.astro';
+import Footer from '@components/Footer.astro';
+import DescriptionBlog from '@components/DescriptionBlog.astro';
+import NavBarActions from '@components/NavBarActions.astro';
+import { getDictionary, DEFAULT_LANG } from '@i18n/config';
+import type { Lang } from '@i18n/config';
 
-const { pageTitle } = Astro.props;
+interface Props {
+  lang?: Lang;
+  pageTitle: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>[];
+  altUrls?: { es: string; en: string };
+}
+
+const {
+  lang = DEFAULT_LANG,
+  pageTitle,
+  description,
+  ogType = 'website',
+  ogImage,
+  jsonLd = [],
+  altUrls,
+} = Astro.props;
+
+const dict = getDictionary(lang);
+const desc = description ?? dict.siteDescription;
+const canonical = new URL(Astro.url.pathname, Astro.site!);
+const ogLocale = lang === 'es' ? 'es' : 'en';
+const ogImageSrc = ogImage ?? new URL('/og-default.png', Astro.site!).toString();
+const feedUrl = lang === 'es' ? '/feed.xml' : '/en/feed.xml';
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/logoBlog.svg" />
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={dict.siteName}
+      href={new URL(feedUrl, Astro.site!)}
+    />
+    {altUrls && (
+      <>
+        <link
+          rel="alternate"
+          hreflang="es"
+          href={new URL(altUrls.es, Astro.site!)}
+        />
+        <link
+          rel="alternate"
+          hreflang="en"
+          href={new URL(altUrls.en, Astro.site!)}
+        />
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(altUrls.es, Astro.site!)}
+        />
+      </>
+    )}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={dict.siteName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:image" content={ogImageSrc} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      name="twitter:card"
+      content={ogImage ? 'summary_large_image' : 'summary'}
+    />
+    {jsonLd.map((block) => (
+      <script type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="layout">
+        <aside class="sidebar">
+          <DescriptionBlog lang={lang} />
+          <Navigation lang={lang} />
+          <NavBarActions lang={lang} />
+        </aside>
 
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{pageTitle}</title>
-	</head>
-	<body>
-		<div class="page-shell">
-			<div class="layout">
-				<aside class="sidebar">
-					<Description />
-					<Navigation />
-					<NavBarActions/>
-				</aside>
-
-				<main class="content">
-					<slot />
-					<Footer />
-				</main>
-			</div>
-		</div>
-	</body>
+        <main class="content" id="content">
+          <slot />
+          <Footer lang={lang} />
+        </main>
+      </div>
+    </div>
+  </body>
 </html>
-
-<style></style>
