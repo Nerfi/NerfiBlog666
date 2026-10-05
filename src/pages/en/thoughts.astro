@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { getDictionary, langPath } from '@i18n/config';
 import type { Lang } from '@i18n/config';
 
-const lang: Lang = 'es';
+const lang: Lang = 'en';
 const dict = getDictionary(lang);
 
 const allPosts = await getCollection('blog');
@@ -60,7 +60,6 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
 </Layout>
 
 <script>
-  // Helper functions need to be available at render time
   function formatDate(date: Date, lang: 'es' | 'en'): string {
     const locale = lang === 'es' ? 'es-ES' : 'en-US';
     return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
