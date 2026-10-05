@@ -7,10 +7,10 @@ import type { Lang } from '@i18n/config';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts
-    .filter((p) => postLang(p.id) === 'es')
+    .filter((p) => postLang(p.id) === 'en')
     .map((post) => ({
       params: { slug: post.id.slice(3) },
-      props: { post, lang: 'es' as Lang },
+      props: { post, lang: 'en' as Lang },
     }));
 }
 
