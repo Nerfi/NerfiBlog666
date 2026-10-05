@@ -1,0 +1,70 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getDictionary, langPath, postLang } from '@i18n/config';
+import type { Lang } from '@i18n/config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const tags = new Set<string>();
+  for (const post of posts) {
+    if (postLang(post.id) === 'es') {
+      for (const tag of post.data.tags) tags.add(tag);
+    }
+  }
+  return Array.from(tags).map((tag) => ({
+    params: { tag },
+    props: { tag, lang: 'es' as Lang },
+  }));
+}
+
+const { tag, lang } = Astro.props;
+const dict = getDictionary(lang);
+
+const allPosts = await getCollection('blog');
+const tagged = allPosts
+  .filter((p) => postLang(p.id) === lang && p.data.tags.includes(tag))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
+---
+
+<Layout lang={lang} pageTitle={`#${tag} · ${dict.siteName}`} description={`${dict.tagCount(tagged.length)} con la etiqueta #${tag}`} altUrls={{ es: `/tags/${tag}`, en: `/en/tags/${tag}` }}>
+  <section class="tag-page">
+    <p class="section-label">{dict.sections.tags}</p>
+    <h1>#{tag}</h1>
+    <p class="tag-summary">{dict.tagCount(tagged.length)}</p>
+    {tagged.length > 0 ? (
+      <ul class="post-list">
+        {tagged.map((post) => (
+          <li class="post-list-item" key={post.id}>
+            <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate, lang)}
+            </time>
+            <h3 class="post-title">
+              <a href={langPath(lang, `/posts/${post.id}`)}>{post.data.title}</a>
+            </h3>
+            <p class="post-description">{post.data.description}</p>
+            <div class="post-tags">
+              {post.data.tags.map((t) => (
+                <span class="tag" key={t}>{t}</span>
+              ))}
+            </div>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">{dict.empty}</p>
+    )}
+  </section>
+</Layout>
+
+<script>
+  function formatDate(date: Date, lang: 'es' | 'en'): string {
+    const locale = lang === 'es' ? 'es-ES' : 'en-US';
+    return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+  }
+  function postLang(id: string): 'es' | 'en' {
+    return id.startsWith('en/') ? 'en' : 'es';
+  }
+</script>
