@@ -2,12 +2,11 @@
 import Layout from '@layouts/Layout.astro';
 import { getDictionary } from '@i18n/config';
 
-const dict = getDictionary('es');
+const dict = getDictionary('en');
 ---
 
-<Layout lang="es" pageTitle={dict.aboutTitle} description={dict.aboutIntro}>
+<Layout lang="en" pageTitle={dict.aboutTitle} description={dict.aboutIntro}>
   <section class="about">
-    <h2>{dict.aboutTitle}</h2>
     {dict.aboutBody.map((p, i) => (
       <p key={i} class="about-paragraph">{p}</p>
     ))}

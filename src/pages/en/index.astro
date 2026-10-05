@@ -3,17 +3,17 @@ import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getDictionary } from '@i18n/config';
 
-const dict = getDictionary('es');
+const dict = getDictionary('en');
 
 const allPosts = await getCollection('blog');
 const latest = allPosts
-  .filter((post) => postLang(post.id) === 'es')
+  .filter((post) => postLang(post.id) === 'en')
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
 ---
 
-<Layout lang="es" pageTitle={dict.homeTitle} description={dict.homeIntro}>
+<Layout lang="en" pageTitle={dict.homeTitle} description={dict.homeIntro}>
   <section class="home">
     <h2 class="home-label">{dict.homeLabel}</h2>
     <p class="home-intro">{dict.homeIntro}</p>
@@ -33,7 +33,7 @@ const latest = allPosts
             <li key={post.id}>
               <a href={`/posts/${post.id}`} class="post-summary">
                 <time datetime={post.data.pubDate.toISOString()}>
-                  {formatDate(post.data.pubDate, 'es')}
+                  {formatDate(post.data.pubDate, 'en')}
                 </time>
                 <span class="post-summary-meta">
                   {post.data.tags.map((t) => `<span class="tag">${t}</span>`).join(' ')}
