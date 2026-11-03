@@ -11,8 +11,9 @@ headers, the build-time dependencies and the repo.
   `src/components/NavBarActions.astro` changes, recompute its sha256 and update `_headers`.
 - Secrets: `gitleaks git .` scanned 25 commits, no leaks (2026-11-03).
 - HTTPS: HSTS is sent on every page. "Always Use HTTPS" is a per-zone setting and
-  `workers.dev` is not our zone, so plain `http://` still answers 200 (UNVERIFIED against
-  Cloudflare docs). Accepted: low risk for a static public site. Fix path: add a custom
+  `workers.dev` is not our zone, so plain `http://` still answers 200. Verified 2026-11-03 in
+  developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/
+  (per-zone setting); the workers.dev docs say nothing about HTTP redirects. Accepted: low risk for a static public site. Fix path: add a custom
   domain, then enable "Always Use HTTPS" (SSL/TLS -> Edge Certificates).
 
 ## Dependencies: `npm audit` = 0 vulnerabilities (2026-11-03)
