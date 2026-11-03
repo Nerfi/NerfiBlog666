@@ -1,8 +1,8 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getDictionary, langPath } from '@i18n/config';
-import { postLang, formatDate, sortPosts } from '@utils/posts';
+import { getDictionary } from '@i18n/config';
+import { postLang, postPath, formatDate, sortPosts } from '@utils/posts';
 import type { Lang } from '@i18n/config';
 
 const lang: Lang = 'es';
@@ -22,7 +22,7 @@ const trips = sortPosts(
       <ul class="trip-list">
         {trips.map((post) => (
           <li class="trip-card">
-            <a href={langPath(lang, `/posts/${post.id}`)}>
+            <a href={postPath(post)}>
               {post.data.cover && (
                 <img src={post.data.cover} alt={post.data.title} loading="lazy" />
               )}

@@ -2,7 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getDictionary } from '@i18n/config';
-import { postLang, formatDate, sortPosts } from '@utils/posts';
+import { postLang, postPath, formatDate, sortPosts } from '@utils/posts';
 
 const dict = getDictionary('es');
 
@@ -28,7 +28,7 @@ const latest = sortPosts(allPosts.filter((p) => postLang(p.id) === 'es')).slice(
         <ul>
           {latest.map((post) => (
             <li>
-              <a href={`/posts/${post.id}`} class="post-summary">
+              <a href={postPath(post)} class="post-summary">
                 <time datetime={post.data.pubDate.toISOString()}>
                   {formatDate(post.data.pubDate, 'es')}
                 </time>

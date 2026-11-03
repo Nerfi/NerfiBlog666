@@ -2,7 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getDictionary, langPath } from '@i18n/config';
-import { postLang, formatDate, sortPosts } from '@utils/posts';
+import { postLang, postPath, formatDate, sortPosts } from '@utils/posts';
 import type { Lang } from '@i18n/config';
 
 export async function getStaticPaths() {
@@ -43,7 +43,7 @@ const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
               {formatDate(post.data.pubDate, lang)}
             </time>
             <h3 class="post-title">
-              <a href={langPath(lang, `/posts/${post.id}`)}>{post.data.title}</a>
+              <a href={postPath(post)}>{post.data.title}</a>
             </h3>
             <p class="post-description">{post.data.description}</p>
             <div class="post-tags">

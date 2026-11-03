@@ -1,11 +1,17 @@
 import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '@i18n/config';
-import { postLang as i18nPostLang } from '@i18n/config';
+import { langPath, postLang as i18nPostLang } from '@i18n/config';
 
 export type Post = CollectionEntry<'blog'>;
 
 export function postLang(id: string): Lang {
   return i18nPostLang(id);
+}
+
+/** Public URL of a post. Post ids carry the language folder ("es/my-post"); the URL does not. */
+export function postPath(post: Post): string {
+  const lang = postLang(post.id);
+  return langPath(lang, `/posts/${post.id.slice(lang.length + 1)}`);
 }
 
 export function sortPosts(posts: Post[]): Post[] {

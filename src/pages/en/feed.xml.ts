@@ -2,6 +2,7 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { site } from '@config/site';
 import { getDictionary, postLang } from '@i18n/config';
+import { postPath } from '@utils/posts';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
@@ -19,7 +20,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.pubDate,
-      link: `/posts/${post.id}`,
+      link: postPath(post),
       author: post.data.author || site.author,
       categories: post.data.tags,
     })),
