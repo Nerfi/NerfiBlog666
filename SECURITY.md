@@ -19,4 +19,6 @@ headers, the build-time dependencies and the repo.
   none of them; no Astro code runs in production. The AVIF advisory needs a malicious
   image at build time, and all images are our own.
 - Cost if wrong: low, build machine only.
-- Next: upgrade Astro to 7 in its own change, with a build and visual check.
+- Tried 2026-11-03: Astro 7.4.5 gives 0 vulnerabilities, but needs Node >=22.23.4 (local is
+  20.19.6). Reverted. Next: install Node 22 locally, set the Node version in the Cloudflare
+  build settings, then upgrade in its own change with a build and visual check.
