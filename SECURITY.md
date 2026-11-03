@@ -25,3 +25,12 @@ headers, the build-time dependencies and the repo.
 - Only miss: Subresource Integrity (-5). The one external script is Cloudflare's analytics
   beacon, loaded over HTTPS from an allowed origin; Cloudflare changes it in place, so a
   fixed SRI hash would break it. Accepted.
+
+## OWASP checklist (`web-api.md`), 2026-11-03
+Static site: no endpoints, auth, sessions, forms, database, uploads or server code.
+- Access control (A01, API1/3/5), authentication (A07, API2): N/A, nothing to protect, no accounts.
+- Injection (A05): N/A, no queries or user input. Only `set:html` is JSON-LD built from our own frontmatter.
+- Input (API10, API7), resources (API4/6): N/A, no outbound calls or endpoints; Cloudflare serves and rate-limits static assets.
+- Configuration (A02/A06/API8/9): headers + CSP set (see Controls); Observatory A+; deps 0 vulns.
+- Cryptography (A04): TLS terminated by Cloudflare; HSTS on. Open item: "Always Use HTTPS".
+- Errors/logs/integrity (A10/A09/A08/A03): no stack traces (static 404); no secrets (gitleaks); supply chain via lockfile + `npm audit` = 0.
