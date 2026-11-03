@@ -12,13 +12,10 @@ headers, the build-time dependencies and the repo.
 - Secrets: `gitleaks git .` scanned 25 commits, no leaks (2026-11-03).
 - HTTPS: enable "Always Use HTTPS" in Cloudflare (SSL/TLS -> Edge Certificates).
 
-## Accepted risk: `npm audit` (1 critical, 15 high), 2026-11-03
-- Cause: `astro <=7.3.1`, plus transitive `vite` and `zod`. The fix needs Astro 5 -> 7 (major).
-- Why accepted: the advisories cover SSR, server islands, the dev server, spread props,
-  `define:vars` and View Transitions. This site is static output with no adapter and uses
-  none of them; no Astro code runs in production. The AVIF advisory needs a malicious
-  image at build time, and all images are our own.
-- Cost if wrong: low, build machine only.
-- Tried 2026-11-03: Astro 7.4.5 gives 0 vulnerabilities, but needs Node >=22.23.4 (local is
-  20.19.6). Reverted. Next: install Node 22 locally, set the Node version in the Cloudflare
-  build settings, then upgrade in its own change with a build and visual check.
+## Dependencies: `npm audit` = 0 vulnerabilities (2026-11-03)
+- Upgraded Astro 5.17 -> 7.4.5 (+ rss, sitemap, check). The old 1 critical / 15 high came
+  from `astro <=7.3.1`, `vite` and `zod`; no accepted risk remains.
+- Astro 7 needs Node >=22.23.4. Pinned in `.nvmrc` (Cloudflare Workers Builds reads it)
+  and `engines` in `package.json`.
+- Checked: `astro build` (17 pages), `astro check` (0 errors), output identical except
+  whitespace; the theme script hash in `_headers` is unchanged.
