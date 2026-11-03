@@ -22,6 +22,7 @@ interface Props {
   ogImage?: string;
   jsonLd?: Record<string, unknown>[];
   altUrls?: { es: string; en: string };
+  noindex?: boolean;
 }
 
 const {
@@ -32,6 +33,7 @@ const {
   ogImage,
   jsonLd = [],
   altUrls,
+  noindex = false,
 } = Astro.props;
 
 const dict = getDictionary(lang);
@@ -53,6 +55,7 @@ const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     <title>{pageTitle}</title>
     <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -91,6 +94,7 @@ const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
       name="twitter:card"
       content={ogImage ? 'summary_large_image' : 'summary'}
     />
+    <meta name="twitter:image" content={ogImageSrc} />
     {jsonLd.map((block) => (
       <script type="application/ld+json" set:html={JSON.stringify(block)} />
     ))}

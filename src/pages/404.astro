@@ -5,7 +5,7 @@ import { getDictionary } from '@i18n/config';
 const dict = getDictionary('es');
 ---
 
-<Layout lang="es" pageTitle={`404 · ${dict.siteName}`}>
+<Layout lang="es" pageTitle={`404 · ${dict.siteName}`} noindex>
   <p class="section-label">404</p>
   <h1>{dict.notFoundTitle}</h1>
   <p>{dict.notFoundBody}</p>
