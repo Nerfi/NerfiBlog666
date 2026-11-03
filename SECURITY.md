@@ -10,7 +10,10 @@ headers, the build-time dependencies and the repo.
 - CSP allows one inline script (theme) by hash. If the inline script in
   `src/components/NavBarActions.astro` changes, recompute its sha256 and update `_headers`.
 - Secrets: `gitleaks git .` scanned 25 commits, no leaks (2026-11-03).
-- HTTPS: enable "Always Use HTTPS" in Cloudflare (SSL/TLS -> Edge Certificates).
+- HTTPS: HSTS is sent on every page. "Always Use HTTPS" is a per-zone setting and
+  `workers.dev` is not our zone, so plain `http://` still answers 200 (UNVERIFIED against
+  Cloudflare docs). Accepted: low risk for a static public site. Fix path: add a custom
+  domain, then enable "Always Use HTTPS" (SSL/TLS -> Edge Certificates).
 
 ## Dependencies: `npm audit` = 0 vulnerabilities (2026-11-03)
 - Upgraded Astro 5.17 -> 7.4.5 (+ rss, sitemap, check). The old 1 critical / 15 high came
@@ -32,5 +35,5 @@ Static site: no endpoints, auth, sessions, forms, database, uploads or server co
 - Injection (A05): N/A, no queries or user input. Only `set:html` is JSON-LD built from our own frontmatter.
 - Input (API10, API7), resources (API4/6): N/A, no outbound calls or endpoints; Cloudflare serves and rate-limits static assets.
 - Configuration (A02/A06/API8/9): headers + CSP set (see Controls); Observatory A+; deps 0 vulns.
-- Cryptography (A04): TLS terminated by Cloudflare; HSTS on. Open item: "Always Use HTTPS".
+- Cryptography (A04): TLS terminated by Cloudflare; HSTS on. Open item: HTTP->HTTPS redirect (needs custom domain).
 - Errors/logs/integrity (A10/A09/A08/A03): no stack traces (static 404); no secrets (gitleaks); supply chain via lockfile + `npm audit` = 0.
