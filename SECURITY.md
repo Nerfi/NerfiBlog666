@@ -19,3 +19,9 @@ headers, the build-time dependencies and the repo.
   and `engines` in `package.json`.
 - Checked: `astro build` (17 pages), `astro check` (0 errors), output identical except
   whitespace; the theme script hash in `_headers` is unchanged.
+
+## External scan
+- Mozilla Observatory, 2026-11-03: grade A+, score 125, 11 of 12 tests passed.
+- Only miss: Subresource Integrity (-5). The one external script is Cloudflare's analytics
+  beacon, loaded over HTTPS from an allowed origin; Cloudflare changes it in place, so a
+  fixed SRI hash would break it. Accepted.
