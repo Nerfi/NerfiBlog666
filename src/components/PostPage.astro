@@ -1,4 +1,5 @@
 ---
+import Layout from '@layouts/Layout.astro';
 import { getDictionary, langPath } from '@i18n/config';
 import type { Lang } from '@i18n/config';
 import { formatDate, readMinutes, getPrevNext, postLang, sortPosts, filterByLang } from '@utils/posts';
@@ -25,39 +26,48 @@ const minutes = readMinutes(post.body);
 const formattedDate = formatDate(pubDate, lang);
 const siteUrl = Astro.site!.toString();
 const canonical = new URL(langPath(lang, `/posts/${slug}`), Astro.site!);
-const ogImage = post.data.cover ? new URL(post.data.cover, Astro.site!).toString() : `${siteUrl}/og-default.png`;
 
-// Breadcrumb JSON-LD
-const breadcrumb = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": dict.nav.home, "item": `${siteUrl}${langPath(lang, '/')}` },
-    { "@type": "ListItem", "position": 2, "name": dict.sections.thoughts, "item": `${siteUrl}${langPath(lang, '/thoughts')}` },
-    { "@type": "ListItem", "position": 3, "name": post.data.title, "item": canonical.toString() }
-  ]
-};
+// Breadcrumb section: a post tagged "trips" (and not "thoughts") sits under Trips.
+const isTrip = post.data.tags.includes('trips') && !post.data.tags.includes('thoughts');
+const section = isTrip ? 'trips' : 'thoughts';
 
-// BlogPosting JSON-LD
-const blogPosting = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": post.data.title,
-  "description": post.data.description,
-  "image": ogImage,
-  "datePublished": pubDate.toISOString(),
-  "dateModified": pubDate.toISOString(),
-  "author": { "@type": "Person", "name": post.data.author || "TRIP" },
-  "publisher": { "@type": "Organization", "name": "Nerf's World" },
-  "inLanguage": lang,
-  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical.toString() }
-};
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": dict.nav.home, "item": `${siteUrl}${langPath(lang, '/')}` },
+      { "@type": "ListItem", "position": 2, "name": dict.sections[section], "item": `${siteUrl}${langPath(lang, `/${section}`)}` },
+      { "@type": "ListItem", "position": 3, "name": post.data.title, "item": canonical.toString() }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.data.title,
+    "description": post.data.description,
+    "image": `${siteUrl}og-default.png`,
+    "datePublished": pubDate.toISOString(),
+    "dateModified": pubDate.toISOString(),
+    "author": { "@type": "Person", "name": post.data.author },
+    "publisher": { "@type": "Organization", "name": dict.siteName },
+    "inLanguage": lang,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonical.toString() }
+  }
+];
 
 function getPostSlug(p: Post, l: Lang): string {
   return p.id.startsWith(`${l}/`) ? p.id.slice(l.length + 1) : p.id;
 }
 ---
 
+<Layout
+  lang={lang}
+  pageTitle={`${post.data.title} · ${dict.siteName}`}
+  description={post.data.description}
+  ogType="article"
+  jsonLd={jsonLd}
+>
 <article class="post-page">
   <p class="section-label">{dict.sections.post}</p>
   <h1>{post.data.title}</h1>
@@ -102,3 +112,4 @@ function getPostSlug(p: Post, l: Lang): string {
     </nav>
   ) : null}
 </article>
+</Layout>
