@@ -39,6 +39,7 @@ Deployed to Cloudflare Workers (static assets) via Git integration.
 - **Language of a post comes from its folder**: `src/blog/es/...` → `es`, `src/blog/en/...` → `en`.
 - **Adding a post**: create `src/blog/<lang>/<slug>/index.md`. Put images in the same folder and reference them relatively (`![](foto-1.png)`); the content layer optimizes them. `cover` in frontmatter is a plain relative string and is NOT yet optimized.
 - **UI strings** live only in `src/i18n/config.ts` dictionaries. Never hardcode ES/EN text in components.
+- **About page** is content, not UI: edit `src/about/es.md` and `src/about/en.md` (frontmatter `title`, `description`, Markdown body). It is its own `about` collection, so it never appears in post lists, tags or feeds.
 - **Commits are atomic**: one logical change per commit; never mix a refactor with a feature or fix.
 - **Language toggle** maps each page to its twin (`/x` ↔ `/en/x`). Posts have no 1:1 mapping, so the toggle falls back to home.
 

@@ -1,14 +1,17 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import { getDictionary } from '@i18n/config';
+import { getEntry, render } from 'astro:content';
 
-const dict = getDictionary('en');
+const entry = await getEntry('about', 'en');
+if (!entry) throw new Error("Missing About content: src/about/en.md");
+const { Content } = await render(entry);
 ---
 
-<Layout lang="en" pageTitle={dict.aboutTitle} description={dict.aboutIntro}>
+<Layout lang="en" pageTitle={entry.data.title} description={entry.data.description}>
   <section class="about">
-    {dict.aboutBody.map((p) => (
-      <p class="about-paragraph">{p}</p>
-    ))}
+    <h1>{entry.data.title}</h1>
+    <div class="post-content">
+      <Content />
+    </div>
   </section>
 </Layout>

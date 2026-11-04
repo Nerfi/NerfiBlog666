@@ -14,7 +14,7 @@ const trips = sortPosts(
 );
 ---
 
-<Layout lang={lang} pageTitle={dict.sections.trips} description={dict.aboutIntro}>
+<Layout lang={lang} pageTitle={dict.sections.trips} description={dict.paths.find((p) => p.href === '/trips')?.body ?? dict.siteDescription}>
   <section class="trips">
     <p class="section-label">{dict.sections.trips}</p>
     <h1>{dict.sections.trips}</h1>

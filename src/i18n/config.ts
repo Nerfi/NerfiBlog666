@@ -52,9 +52,6 @@ export interface Dictionary {
   tagsTitle: string;
   tagsIntro: string;
   tagCount: (count: number) => string;
-  aboutTitle: string;
-  aboutIntro: string;
-  aboutBody: string[];
   notFoundTitle: string;
   notFoundBody: string;
   rights: (year: number) => string;
@@ -110,12 +107,6 @@ const es: Dictionary = {
   tagsIntro: 'Todas las etiquetas del blog.',
   tagCount: (count: number) =>
     count === 1 ? '1 post' : `${count} posts`,
-  aboutTitle: 'Sobre TRIP',
-  aboutIntro: 'Quién escribe y por qué existe este sitio.',
-  aboutBody: [
-    'Soy TRIP. Escribo sobre lo que me importa: ideas, viajes y tecnología.',
-    'Este sitio es mi archivo personal. Escribo cuando quiero y publico cuando el texto está listo. No hay ruido ni humo.',
-  ],
   notFoundTitle: 'Página no encontrada',
   notFoundBody: 'Esta página no existe. Vuelve al inicio y sigue explorando.',
   rights: (year: number) => `© ${year} TRIP`,
@@ -170,12 +161,6 @@ const en: Dictionary = {
   tagsTitle: 'An index by word.',
   tagsIntro: 'All tags in the blog.',
   tagCount: (count: number) => (count === 1 ? '1 post' : `${count} posts`),
-  aboutTitle: 'About TRIP',
-  aboutIntro: 'Who writes here and why this site exists.',
-  aboutBody: [
-    'I am TRIP. I write about what matters to me: ideas, trips and technology.',
-    'This site is my personal archive. I write when I feel like it and publish when the text is ready. No noise, no smoke.',
-  ],
   notFoundTitle: 'Page not found',
   notFoundBody: 'This page does not exist. Go back home and keep exploring.',
   rights: (year: number) => `© ${year} TRIP`,
