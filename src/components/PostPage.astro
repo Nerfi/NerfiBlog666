@@ -27,9 +27,8 @@ const formattedDate = formatDate(pubDate, lang);
 const siteUrl = Astro.site!.toString();
 const canonical = new URL(langPath(lang, `/posts/${slug}`), Astro.site!);
 
-// Breadcrumb section: a post tagged "trips" (and not "thoughts") sits under Trips.
-const isTrip = post.data.tags.includes('trips') && !post.data.tags.includes('thoughts');
-const section = isTrip ? 'trips' : 'thoughts';
+// Breadcrumb section: first section tag wins; "thoughts" is the fallback.
+const section = (['thoughts', 'trips', 'books'] as const).find((s) => post.data.tags.includes(s)) ?? 'thoughts';
 
 const jsonLd = [
   {

@@ -16,6 +16,7 @@ function getAlternatePath(currentLang: Lang, path: string): string {
   if (path.startsWith('/tags/')) return langPath(otherLang, path);
   if (path.startsWith('/thoughts')) return langPath(otherLang, '/thoughts');
   if (path.startsWith('/trips')) return langPath(otherLang, '/trips');
+  if (path.startsWith('/books')) return langPath(otherLang, '/books');
   if (path.startsWith('/about')) return langPath(otherLang, '/about');
   if (path.startsWith('/tags')) return langPath(otherLang, '/tags');
   return langPath(otherLang, '/');

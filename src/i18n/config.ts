@@ -28,12 +28,14 @@ export interface Dictionary {
     home: string;
     thoughts: string;
     trips: string;
+    books: string;
     tags: string;
     about: string;
   };
   sections: {
     thoughts: string;
     trips: string;
+    books: string;
     tags: string;
     about: string;
     post: string;
@@ -65,12 +67,14 @@ const es: Dictionary = {
     home: 'Inicio',
     thoughts: 'Pensamientos',
     trips: 'Viajes',
+    books: 'Libros',
     tags: 'Etiquetas',
     about: 'Sobre el autor',
   },
   sections: {
     thoughts: 'Pensamientos',
     trips: 'Viajes',
+    books: 'Libros',
     tags: 'Etiquetas',
     about: 'Sobre el autor',
     post: 'Escrito',
@@ -89,6 +93,11 @@ const es: Dictionary = {
       href: '/trips',
       title: 'Viajes',
       body: 'Fotos y lugares. Sin ruido.',
+    },
+    {
+      href: '/books',
+      title: 'Libros',
+      body: 'Lo que leo y lo que pienso de ello.',
     },
     {
       href: '/tags',
@@ -120,12 +129,14 @@ const en: Dictionary = {
     home: 'Home',
     thoughts: 'Thoughts',
     trips: 'Trips',
+    books: 'Books',
     tags: 'Tags',
     about: 'About the author',
   },
   sections: {
     thoughts: 'Thoughts',
     trips: 'Trips',
+    books: 'Books',
     tags: 'Tags',
     about: 'About the author',
     post: 'Writing',
@@ -144,6 +155,11 @@ const en: Dictionary = {
       href: '/trips',
       title: 'Trips',
       body: 'Photos and places. No noise.',
+    },
+    {
+      href: '/books',
+      title: 'Books',
+      body: 'What I read and what I think about it.',
     },
     {
       href: '/tags',

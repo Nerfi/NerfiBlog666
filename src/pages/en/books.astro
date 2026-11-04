@@ -1,0 +1,61 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getDictionary } from '@i18n/config';
+import { postLang, postPath, formatDate, sortPosts } from '@utils/posts';
+import type { Lang } from '@i18n/config';
+
+const lang: Lang = 'en';
+const dict = getDictionary(lang);
+
+const allPosts = await getCollection('blog');
+const books = sortPosts(
+  allPosts.filter((p) => postLang(p.id) === lang && p.data.tags.includes('books'))
+);
+
+function groupByYear(posts: typeof books): Record<string, typeof posts> {
+  const groups: Record<string, typeof posts> = {};
+  for (const post of posts) {
+    const year = post.data.pubDate.getFullYear().toString();
+    (groups[year] ??= []).push(post);
+  }
+  return groups;
+}
+
+const byYear = groupByYear(books);
+const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
+---
+
+<Layout lang={lang} pageTitle={dict.sections.books} description={dict.paths.find((p) => p.href === '/books')?.body ?? dict.siteDescription}>
+  <section class="books">
+    <p class="section-label">{dict.sections.books}</p>
+    <h1>{dict.sections.books}</h1>
+    {years.length > 0 ? (
+      years.map((year) => (
+        <article class="year-group">
+          <h2 class="year-heading">{year}</h2>
+          <ul class="post-list">
+            {byYear[year].map((post) => (
+              <li class="post-list-item">
+                <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+                  {formatDate(post.data.pubDate, lang)}
+                </time>
+                <h3 class="post-title">
+                  <a href={postPath(post)}>{post.data.title}</a>
+                </h3>
+                <p class="post-description">{post.data.description}</p>
+                <div class="post-tags">
+                  {post.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    ) : (
+      <p class="empty">{dict.empty}</p>
+    )}
+  </section>
+</Layout>
