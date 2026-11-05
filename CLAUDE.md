@@ -37,7 +37,13 @@ Deployed to Cloudflare Workers (static assets) via Git integration.
 ## Conventions
 
 - **Language of a post comes from its folder**: `src/blog/es/...` → `es`, `src/blog/en/...` → `en`.
-- **Adding a post**: create `src/blog/<lang>/<slug>/index.md`. Put images in the same folder and reference them relatively (`![](foto-1.png)`); the content layer optimizes them. `cover` in frontmatter is a plain relative string and is NOT yet optimized.
+- **Adding a post**: create `src/blog/<lang>/<slug>/index.md`. Put images in the same folder and reference them relatively (`![](foto-1.png)`); the content layer optimizes them. `cover` is a relative path to an image in the same folder (`cover: ./cover.png`); Astro optimizes it, and it becomes the `og:image` and the trips list image.
+- **SEO checklist for a new post** (the templates already add breadcrumbs, JSON-LD, article meta, canonical and hreflang; these five items are manual):
+  1. `title`: correct Spanish accents (`Cómo`, not `Como`), 60 characters or fewer.
+  2. `description`: 50 to 160 characters, states the main idea, not a copy of the title.
+  3. `tags`: at least one topical tag besides the section tag (`thoughts`, `trips`, `books`). Each new tag creates `/tags/<tag>/`.
+  4. `cover` (optional): add it for trips and for social sharing; 1200×630 or larger.
+  5. Body: one `##` for each main part, no skipped heading levels, check spelling and punctuation before publishing.
 - **UI strings** live only in `src/i18n/config.ts` dictionaries. Never hardcode ES/EN text in components.
 - **About page** is content, not UI: edit `src/about/es.md` and `src/about/en.md` (frontmatter `title`, `description`, Markdown body). It is its own `about` collection, so it never appears in post lists, tags or feeds.
 - **Commits are atomic**: one logical change per commit; never mix a refactor with a feature or fix.
