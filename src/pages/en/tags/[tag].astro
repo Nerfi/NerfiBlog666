@@ -30,7 +30,7 @@ const tagged = sortPosts(
 const canonical = new URL(langPath(lang, `/tags/${tag}`), Astro.site!);
 ---
 
-<Layout lang={lang} pageTitle={`#${tag} · ${dict.siteName}`} description={`${dict.tagCount(tagged.length)} tagged with #${tag}`} altUrls={{ es: `/tags/${tag}`, en: `/en/tags/${tag}` }}>
+<Layout lang={lang} pageTitle={`#${tag} · ${dict.siteName}`} description={`${dict.tagCount(tagged.length)} tagged with #${tag}`} altUrls={{ es: `/tags/${tag}/`, en: `/en/tags/${tag}/` }}>
   <section class="tag-page">
     <p class="section-label">{dict.sections.tags}</p>
     <h1>#{tag}</h1>

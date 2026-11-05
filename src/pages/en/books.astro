@@ -26,7 +26,7 @@ const byYear = groupByYear(books);
 const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
 ---
 
-<Layout lang={lang} pageTitle={dict.sections.books} description={dict.paths.find((p) => p.href === '/books')?.body ?? dict.siteDescription}>
+<Layout lang={lang} pageTitle={`${dict.sections.books} · ${dict.siteName}`} description={dict.paths.find((p) => p.href === '/books')?.body ?? dict.siteDescription} altUrls={{ es: '/books/', en: '/en/books/' }}>
   <section class="books">
     <p class="section-label">{dict.sections.books}</p>
     <h1>{dict.sections.books}</h1>

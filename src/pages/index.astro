@@ -10,7 +10,7 @@ const allPosts = await getCollection('blog');
 const latest = sortPosts(allPosts.filter((p) => postLang(p.id) === 'es')).slice(0, 3);
 ---
 
-<Layout lang="es" pageTitle={dict.homeTitle} description={dict.homeIntro}>
+<Layout lang="es" pageTitle={`${dict.siteName} · ${dict.homeTitle}`} description={dict.homeIntro} altUrls={{ es: '/', en: '/en/' }}>
   <section class="home">
     <h2 class="home-label">{dict.homeLabel}</h2>
     <p class="home-intro">{dict.homeIntro}</p>

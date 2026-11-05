@@ -24,19 +24,20 @@ const { Content } = await render(post);
 const pubDate = post.data.pubDate;
 const minutes = readMinutes(post.body);
 const formattedDate = formatDate(pubDate, lang);
-const siteUrl = Astro.site!.toString();
 const canonical = new URL(langPath(lang, `/posts/${slug}`), Astro.site!);
 
 // Breadcrumb section: first section tag wins; "thoughts" is the fallback.
 const section = (['thoughts', 'trips', 'books'] as const).find((s) => post.data.tags.includes(s)) ?? 'thoughts';
 
+// new URL() instead of string concatenation: Astro.site ends with "/" and langPath() starts with "/".
+const sectionLabel = dict.sections[section];
 const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": dict.nav.home, "item": `${siteUrl}${langPath(lang, '/')}` },
-      { "@type": "ListItem", "position": 2, "name": dict.sections[section], "item": `${siteUrl}${langPath(lang, `/${section}`)}` },
+      { "@type": "ListItem", "position": 1, "name": dict.nav.home, "item": new URL(langPath(lang, '/'), Astro.site!).toString() },
+      { "@type": "ListItem", "position": 2, "name": sectionLabel, "item": new URL(langPath(lang, `/${section}`), Astro.site!).toString() },
       { "@type": "ListItem", "position": 3, "name": post.data.title, "item": canonical.toString() }
     ]
   },
@@ -45,11 +46,14 @@ const jsonLd = [
     "@type": "BlogPosting",
     "headline": post.data.title,
     "description": post.data.description,
-    "image": `${siteUrl}og-default.png`,
+    "url": canonical.toString(),
+    "image": new URL('/og-default.png', Astro.site!).toString(),
     "datePublished": pubDate.toISOString(),
     "dateModified": pubDate.toISOString(),
     "author": { "@type": "Person", "name": post.data.author },
     "publisher": { "@type": "Organization", "name": dict.siteName },
+    "articleSection": sectionLabel,
+    "keywords": post.data.tags.join(', '),
     "inLanguage": lang,
     "mainEntityOfPage": { "@type": "WebPage", "@id": canonical.toString() }
   }
@@ -66,6 +70,8 @@ function getPostSlug(p: Post, l: Lang): string {
   description={post.data.description}
   ogType="article"
   jsonLd={jsonLd}
+  ogImage={post.data.cover ? new URL(post.data.cover.src, Astro.site!).toString() : undefined}
+  article={{ published: pubDate, author: post.data.author, section: sectionLabel, tags: post.data.tags }}
 >
 <article class="post-page">
   <p class="section-label">{dict.sections.post}</p>

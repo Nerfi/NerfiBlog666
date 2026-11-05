@@ -1,13 +1,14 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import { getEntry, render } from 'astro:content';
+import { getDictionary } from '@i18n/config';
 
 const entry = await getEntry('about', 'es');
 if (!entry) throw new Error("Missing About content: src/about/es.md");
 const { Content } = await render(entry);
 ---
 
-<Layout lang="es" pageTitle={entry.data.title} description={entry.data.description}>
+<Layout lang="es" pageTitle={`${entry.data.title} · ${getDictionary('es').siteName}`} description={entry.data.description} altUrls={{ es: '/about/', en: '/en/about/' }}>
   <section class="about">
     <h1>{entry.data.title}</h1>
     <div class="post-content">

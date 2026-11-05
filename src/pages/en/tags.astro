@@ -22,7 +22,7 @@ const tags = Object.entries(tagCounts)
   .map(([name, count]) => ({ name, count }));
 ---
 
-<Layout lang={lang} pageTitle={dict.tagsTitle} description={dict.tagsIntro}>
+<Layout lang={lang} pageTitle={`${dict.sections.tags} · ${dict.siteName}`} description={dict.tagsIntro} altUrls={{ es: '/tags/', en: '/en/tags/' }}>
   <section class="tags-index">
     <p class="section-label">{dict.sections.tags}</p>
     <h1>{dict.tagsTitle}</h1>
