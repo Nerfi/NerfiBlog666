@@ -25,7 +25,7 @@ const trips = sortPosts(
           <li class="trip-card">
             <a href={postPath(post)}>
               {post.data.cover && (
-                <Image src={post.data.cover} alt="" loading="lazy" />
+                <Image src={post.data.cover} alt={post.data.title} loading="lazy" />
               )}
               <div class="trip-meta">
                 <time datetime={post.data.pubDate.toISOString()}>
